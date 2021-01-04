@@ -16,12 +16,10 @@ var questions = elsel(".questions-display");
 var choices = Array.from(elselall(".choice-text"));
 var footer = elsel(".main-card-footer");
 
-var timeLeft = 75;
+var timeLeft = 85;
 
 var currentQuestion = {};
 var availableQuestions = [];
-
-var wrongChoice = -10;
 
 var questionsList = [
     {
@@ -98,12 +96,16 @@ startBtn.addEventListener('click', function() {
 
     function timesUp() {
         timer.textContent = "Time is up!";
+        setTimeout( () => {
+            return window.location.assign("enterscore.html");
+        }, 1000)
+
     }
 
     function displayQuestion() {
 
         if(availableQuestions.length === 0) {
-            return window.location.assign("/enterscore.html");
+            return window.location.assign("enterscore.html");
         }
         var questionIndex = Math.floor(Math.random() * availableQuestions.length);
         currentQuestion = availableQuestions[questionIndex];
@@ -141,6 +143,10 @@ startBtn.addEventListener('click', function() {
                 footer.textContent = "";
                 displayQuestion();
             }, 1000)
+
+            if(selectedChoice != currentQuestion.answer) {
+                timeLeft = timeLeft - 10;
+            }
 
         })
     })
