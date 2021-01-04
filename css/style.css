@@ -73,6 +73,17 @@ body {
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 25px;
+    background: var(--blue-btn);
+    border-bottom: 1px solid var(--blue-btn);
+    box-shadow: 0 0 10px gray;
+}
+
+.header a {
+    color: var(--white-text);
+}
+
+.header div {
+    color: var(--white-text);
 }
 
 
@@ -84,7 +95,6 @@ body {
 }
 
 .main-card {
-    background: var(--test);
     width: 75%;
     height: 300px;
     padding: 10px;
@@ -92,6 +102,31 @@ body {
 
 .main-card-body {
     margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.answer-container {
+    display: flex;
+    width: 500px;
+    border: 1px solid var(--blue-btn);
+    margin-bottom: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+.answer-container:hover {
+    cursor: pointer;
+    box-shadow: 2px 3px 5px gray;
+    transform: translateY(-2px);
+}
+
+.choice-prefix {
+    padding: 5px 10px;
+    color: var(--white-text);
+    background-color: var(--blue-btn);
+}
+
+.choice-text {
+    padding: 5px;
 }
 
 .center-flex {
