@@ -59,6 +59,7 @@ body {
     border-bottom: 1px solid black;
 }
 
+#submit,
 .buttons,
 .score-btn,
 .start-btn {
@@ -74,6 +75,7 @@ body {
     width: 250px;
 }
 
+#submit:hover,
 .buttons:hover,
 .score-btn:hover,
 .start-btn:hover {
@@ -81,6 +83,7 @@ body {
     background-color: var(--blue-btn-drk);
 }
 
+#submit:focus,
 .buttons:focus,
 .score-btn:focus,
 .start-btn:focus {
