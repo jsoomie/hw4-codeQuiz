@@ -17,6 +17,7 @@
     color: var(--text-color);
     line-height: 1;
     font-family: 'NTR', sans-serif;
+    font-size: 1.2rem;
 }
 
 a {
@@ -67,7 +68,6 @@ body {
 
 /* HEADER */
 .header {
-    background-color: var(--test);
     padding: 20px;
     display: flex;
     flex-direction: row;
@@ -83,6 +83,7 @@ body {
 }
 
 .main-card {
+    background: var(--test);
     width: 70%;
     height: 300px;
 }
