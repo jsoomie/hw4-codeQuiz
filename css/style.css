@@ -59,6 +59,7 @@ body {
     border-bottom: 1px solid black;
 }
 
+.buttons,
 .score-btn,
 .start-btn {
     margin: 25px 0 0 0;
@@ -73,12 +74,14 @@ body {
     width: 250px;
 }
 
+.buttons:hover,
 .score-btn:hover,
 .start-btn:hover {
     transform: scale(0.98);
     background-color: var(--blue-btn-drk);
 }
 
+.buttons:focus,
 .score-btn:focus,
 .start-btn:focus {
     outline: 0;
