@@ -130,6 +130,7 @@ body {
 
 .answer-container {
     display: flex;
+    background-color: var(--white-text);
     width: 500px;
     border: 1px solid var(--blue-btn);
     margin-bottom: 10px;

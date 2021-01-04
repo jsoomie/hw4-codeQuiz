@@ -69,7 +69,7 @@ var questionsList = [
         question: "What is the correct syntax to link your CSS file?",
         choice1: "<link href='./css.style>'",
         choice2: "<link src='./css.style>'",
-        choice3: "<link link='./css.style>'",
+        choice3: "<link ='./css.style>'",
         choice4: "<link style='./css.style>'",
         answer: 1
     },
@@ -105,6 +105,11 @@ startBtn.addEventListener('click', function() {
         var questionIndex = Math.floor(Math.random() * availableQuestions.length);
         currentQuestion = availableQuestions[questionIndex];
         questions.textContent = currentQuestion.question;
+
+        choices.forEach(choice => {
+            var number = choice.dataset['value'];
+            choice.textContent = currentQuestion['choice' + number];
+        })
     }
 
 
