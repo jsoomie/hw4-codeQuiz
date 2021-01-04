@@ -14,12 +14,11 @@ var landing = elsel("#landing");
 var timer = elsel(".timer");
 var questions = elsel(".questions-display");
 var choices = Array.from(elselall(".choice-text"));
+var footer = elsel(".main-card-footer");
 
 var timeLeft = 75;
 
 var currentQuestion = {};
-var currentPlay = true;
-var fullQuestions = 4;
 var availableQuestions = [];
 
 var wrongChoice = -10;
@@ -67,10 +66,10 @@ var questionsList = [
     },
     {
         question: "What is the correct syntax to link your CSS file?",
-        choice1: "<link href='./css.style>'",
-        choice2: "<link src='./css.style>'",
-        choice3: "<link ='./css.style>'",
-        choice4: "<link style='./css.style>'",
+        choice1: "<link href=''./css.style>''",
+        choice2: "<link src=''./css.style>''",
+        choice3: "<link =''./css.style>''",
+        choice4: "<link style=''./css.style>''",
         answer: 1
     },
 ]
@@ -102,6 +101,10 @@ startBtn.addEventListener('click', function() {
     }
 
     function displayQuestion() {
+
+        if(availableQuestions.length === 0) {
+            return window.location.assign("/enterscore.html");
+        }
         var questionIndex = Math.floor(Math.random() * availableQuestions.length);
         currentQuestion = availableQuestions[questionIndex];
         questions.textContent = currentQuestion.question;
@@ -109,8 +112,38 @@ startBtn.addEventListener('click', function() {
         choices.forEach(choice => {
             var number = choice.dataset['value'];
             choice.textContent = currentQuestion['choice' + number];
-        })
+        });
+
+        availableQuestions.splice(questionIndex, 1);
     }
+
+    choices.forEach(choice => {
+        choice.addEventListener("click", e => {
+            var selectedChoice = e.target;
+            var selectedAnswer = selectedChoice.dataset["value"];
+
+            var changeColor = 'incorrect';
+            if(selectedAnswer == currentQuestion.answer) {
+                changeColor = 'correct';
+            }
+
+            selectedChoice.parentElement.classList.add(changeColor);
+
+            var changeText = 'incorrect';
+            if(selectedAnswer == currentQuestion.answer) {
+                changeText = 'correct';
+            }
+            
+            footer.textContent = changeText;
+
+            setTimeout( () => {
+                selectedChoice.parentElement.classList.remove(changeColor);
+                footer.textContent = "";
+                displayQuestion();
+            }, 1000)
+
+        })
+    })
 
 
 
