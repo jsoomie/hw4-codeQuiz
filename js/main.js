@@ -8,6 +8,7 @@
 elsel = (x) => document.querySelector(x);
 elselall = (x) => document.querySelectorAll(x);
 
+//DOM Variables
 var startBtn = elsel(".start-btn");
 var main = elsel("#main");
 var landing = elsel("#landing");
@@ -15,12 +16,21 @@ var timer = elsel(".timer");
 var questions = elsel(".questions-display");
 var choices = Array.from(elselall(".choice-text"));
 var footer = elsel(".main-card-footer");
+var main = elsel("#main");
+var scoreBtn = elsel(".score-btn");
+var play = true;
+
+var endScreen = elsel("#end-screen");
+var finalScore = elsel("#final-score");
+var initialEl = elsel("#initials");
+var submitBtn = elsel("#submit");
 
 var timeLeft = 85;
 
 var currentQuestion = {};
 var availableQuestions = [];
 
+// Question List
 var questionsList = [
     {
         question: "The main page of a website is usually referred to as ______________.",
@@ -72,87 +82,136 @@ var questionsList = [
     },
 ]
 
+// Making into array
 availableQuestions = [...questionsList];
 
+// Ending function
+function ending() {
+    play = false;
+    endScreen.classList.add("center-flex");
+    endScreen.classList.remove("hidden");
+    main.classList.add("hidden");
+
+    finalScore.textContent = timeLeft;
+}
+
+console.log(endScreen);
 
 
+// Kick Start
 startBtn.addEventListener('click', function() {
+    play = true;
     landing.classList.remove("center-flex")
     landing.classList.add("hidden");
     main.classList.remove("hidden");
 
-    function setTimer() {
-        var timeInterval = setInterval(function() {
-            timeLeft--;
-            timer.textContent = "Time: " + timeLeft;
+    if(play === true) {
+        function setTimer() {
+            var timeInterval = setInterval(function() {
+                timeLeft--;
+                timer.textContent = "Time: " + timeLeft;
 
-            if(timeLeft === 0) {
-                clearInterval(timeInterval);
-                timesUp();
-            }
+                if(timeLeft === 0) {
+                    clearInterval(timeInterval);
+                    timesUp();
+                }
         
-        }, 1000);
-    }
-
-    function timesUp() {
-        timer.textContent = "Time is up!";
-        setTimeout( () => {
-            return window.location.assign("enterscore.html");
-        }, 1000)
-
-    }
-
-    function displayQuestion() {
-
-        if(availableQuestions.length === 0) {
-            return window.location.assign("enterscore.html");
+            }, 1000);
         }
-        var questionIndex = Math.floor(Math.random() * availableQuestions.length);
-        currentQuestion = availableQuestions[questionIndex];
-        questions.textContent = currentQuestion.question;
 
-        choices.forEach(choice => {
-            var number = choice.dataset['value'];
-            choice.textContent = currentQuestion['choice' + number];
-        });
-
-        availableQuestions.splice(questionIndex, 1);
-    }
-
-    choices.forEach(choice => {
-        choice.addEventListener("click", e => {
-            var selectedChoice = e.target;
-            var selectedAnswer = selectedChoice.dataset["value"];
-
-            var changeColor = 'incorrect';
-            if(selectedAnswer == currentQuestion.answer) {
-                changeColor = 'correct';
-            }
-
-            selectedChoice.parentElement.classList.add(changeColor);
-
-            var changeText = 'incorrect';
-            if(selectedAnswer == currentQuestion.answer) {
-                changeText = 'correct';
-            }
-            
-            footer.textContent = changeText;
-
+        function timesUp() {
+            timer.textContent = "Time is up!";
             setTimeout( () => {
-                selectedChoice.parentElement.classList.remove(changeColor);
-                footer.textContent = "";
-                displayQuestion();
+                ending();
+                play = false;
             }, 1000)
 
-            if(selectedChoice != currentQuestion.answer) {
-                timeLeft = timeLeft - 10;
+        }
+
+        function displayQuestion() {
+
+            var questionIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[questionIndex];
+            questions.textContent = currentQuestion.question;
+
+            choices.forEach(choice => {
+                var number = choice.dataset['value'];
+                choice.textContent = currentQuestion['choice' + number];
+            });
+
+            availableQuestions.splice(questionIndex, 1);
+
+            if(availableQuestions.length === 0) {
+                ending();
+                play = false;
             }
+        }
 
+        choices.forEach(choice => {
+            choice.addEventListener("click", e => {
+                var selectedChoice = e.target;
+                var selectedAnswer = selectedChoice.dataset["value"];
+
+                var changeColor = 'incorrect';
+                if(selectedAnswer == currentQuestion.answer) {
+                    changeColor = 'correct';
+                }
+
+                selectedChoice.parentElement.classList.add(changeColor);
+
+                var changeText = 'incorrect';
+                if(selectedAnswer == currentQuestion.answer) {
+                    changeText = 'correct';
+                }
+            
+                footer.textContent = changeText;
+
+                setTimeout( () => {
+                    selectedChoice.parentElement.classList.remove(changeColor);
+                    footer.textContent = "";
+                    displayQuestion();
+                }, 1000)
+
+                if(selectedChoice != currentQuestion.answer) {
+                    timeLeft = timeLeft - 10;
+                }
+
+            })
         })
-    })
-
-
+    } else {
+        ending();
+    }
 
     setTimer();
     displayQuestion();
 })
+
+function saveHighScores() {
+    var initials = initialEl.value.trim();
+    if (initials !== "") {
+        var highscores = JSON.parse(window.localStorage.getItem("highscores")) || [];
+        var newScore = {
+            score: timeLeft,
+            initials: initials
+        }
+
+        highscores.push(newScore);
+        window.localStorage.setItem("highscores", JSON.stringify(highscores));
+        window.location.href = "highscores.html";
+    }
+}
+
+function checkForEnter(e) {
+    if (e.key === "Enter") {
+        saveHighScores();
+    }
+}
+
+scoreBtn.addEventListener('click', function() {
+    window.location.href = "highscores.html";
+});
+
+
+
+submitBtn.onclick = saveHighScores;
+initialEl.onkeyup = checkForEnter;
