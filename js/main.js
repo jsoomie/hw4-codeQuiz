@@ -19,10 +19,14 @@ var timeLeft = 75;
 
 var currentQuestion = {};
 var currentPlay = true;
+var fullQuestions = 4;
+var availableQuestions = [];
+
+var wrongChoice = -10;
 
 var questionsList = [
     {
-        question: "The main page of a website is usually referred to as _______________",
+        question: "The main page of a website is usually referred to as ______________.",
         choice1: "main.html",
         choice2: "index.html",
         choice3: "webpage.html",
@@ -30,7 +34,7 @@ var questionsList = [
         answer: 2
     },
     {
-        question: "How do you print 'Hello World' in console? with javascript?",
+        question: "How do you print 'Hello World' in console with javascript?",
         choice1: "print('Hello World')",
         choice2: "std::cout >> 'Hello World'",
         choice3: "System.out.println('Hello World')",
@@ -71,31 +75,40 @@ var questionsList = [
     },
 ]
 
+availableQuestions = [...questionsList];
 
-// startBtn.addEventListener('click', function() {
-//     console.log("this has been clicked");
-//     landing.classList.remove("center-flex")
-//     landing.classList.add("hidden");
-//     main.classList.remove("hidden");
-// })
 
-function setTimer() {
-    var timeInterval = setInterval(function() {
-        timeLeft--;
-        timer.textContent = "Time: " + timeLeft;
 
-        if(timeLeft === 0) {
-            clearInterval(timeInterval);
-            timesUp();
-        }
+startBtn.addEventListener('click', function() {
+    landing.classList.remove("center-flex")
+    landing.classList.add("hidden");
+    main.classList.remove("hidden");
+
+    function setTimer() {
+        var timeInterval = setInterval(function() {
+            timeLeft--;
+            timer.textContent = "Time: " + timeLeft;
+
+            if(timeLeft === 0) {
+                clearInterval(timeInterval);
+                timesUp();
+            }
         
-    }, 1000);
-}
+        }, 1000);
+    }
 
-function timesUp() {
-    timer.textContent = "Time is up!";
-}
+    function timesUp() {
+        timer.textContent = "Time is up!";
+    }
+
+    function displayQuestion() {
+        var questionIndex = Math.floor(Math.random() * availableQuestions.length);
+        currentQuestion = availableQuestions[questionIndex];
+        questions.textContent = currentQuestion.question;
+    }
 
 
 
-setTimer();
+    setTimer();
+    displayQuestion();
+})
