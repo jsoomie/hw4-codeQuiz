@@ -39,4 +39,6 @@ function timesUp() {
     timer.textContent = "Time is up!";
 }
 
+
+
 setTimer();
