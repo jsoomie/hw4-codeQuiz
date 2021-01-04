@@ -1,8 +1,19 @@
-var startBtn = document.querySelector(".start-btn");
-var main = document.querySelector("#main");
-var landing = document.querySelector("#landing");
-var timer = document.querySelector(".timer");
+//
+//
+// hw4 - code quiz
+// Jonathan Soukaseume
+//
+
+// Element Selector
+elsel = (x) => document.querySelector(x);
+
+var startBtn = elsel(".start-btn");
+var main = elsel("#main");
+var landing = elsel("#landing");
+var timer = elsel(".timer");
 var timeLeft = 75;
+
+var dispalyQuestions = document
 
 // startBtn.addEventListener('click', function() {
 //     console.log("this has been clicked");
@@ -14,17 +25,17 @@ var timeLeft = 75;
 function setTimer() {
     var timeInterval = setInterval(function() {
         timeLeft--;
-        timer.textContent = timeLeft + " seconds remaining!";
+        timer.textContent = "Time: " + timeLeft;
 
         if(timeLeft === 0) {
             clearInterval(timeInterval);
-            lostMessage();
+            timesUp();
         }
         
     }, 1000);
 }
 
-function lostMessage() {
+function timesUp() {
     timer.textContent = "Time is up!";
 }
 
