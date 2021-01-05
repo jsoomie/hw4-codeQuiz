@@ -172,7 +172,7 @@ startBtn.addEventListener('click', function() {
                 displayQuestion();
             }, 1000)
 
-            if(!selectedChoice == currentQuestion.answer) {
+            if(selectedChoice.dataset["value"] != currentQuestion.answer) {
                 timeLeft = timeLeft - subtractTime;
             }
 
