@@ -25,7 +25,7 @@ var finalScore = elsel("#final-score");
 var initialEl = elsel("#initials");
 var submitBtn = elsel("#submit");
 
-var timeLeft = 85;
+var timeLeft = 75;
 var subtractTime = 15;
 
 var currentQuestion = {};
@@ -81,22 +81,21 @@ var questionsList = [
         choice4: "<link style=''./css.style>''",
         answer: 1
     },
-]
+];
 
 // Making into array
 availableQuestions = [...questionsList];
 
 // Ending function
 function ending() {
+    play = false;
+    timeLeft += 1;
     endScreen.classList.add("center-flex");
     endScreen.classList.remove("hidden");
     main.classList.add("hidden");
 
     finalScore.textContent = timeLeft;
-}
-
-console.log(endScreen);
-
+};
 
 // Kick Start
 startBtn.addEventListener('click', function() {
@@ -104,84 +103,95 @@ startBtn.addEventListener('click', function() {
     landing.classList.add("hidden");
     main.classList.remove("hidden");
 
-    function setTimer() {
-        var timeInterval = setInterval(function() {
-            timeLeft--;
-            timer.textContent = "Time: " + timeLeft;
+    if(play === true) {
+        function setTimer() {
+            var timeInterval = setInterval(function() {
+                timeLeft--;
+                timer.textContent = "Time: " + timeLeft;
 
-            if(timeLeft === 0) {
-                clearInterval(timeInterval);
-                timesUp();
-            }
-            if(timeLeft < 0) {
-                timeLeft = 0;
-            }
+                if(timeLeft === 0) {
+                    clearInterval(timeInterval);
+                    timesUp();
+                };
+                if(timeLeft < 0) {
+                    clearInterval(timeInterval);
+                    timeLeft = 0;
+                    timesUp();
+                };
+
+                if(play === false) {
+                    clearInterval(timeInterval);
+                    timesUp();
+                };
         
-        }, 1000);
-    }
+            }, 1000);
+        };
 
-    function timesUp() {
-        timer.textContent = "Time is up!";
-        clearInterval(setTimer);
-        setTimeout( () => {
-            ending();
-        }, 1000)
+        function timesUp() {
+            timer.textContent = "Time is up!";
+            clearInterval(setTimer);
+            setTimeout( () => {
+                ending();
+                play = false;
+            }, 1000);
 
-    }
+        };
 
-    function displayQuestion() {
+        function displayQuestion() {
 
-        var questionIndex = Math.floor(Math.random() * availableQuestions.length);
-        currentQuestion = availableQuestions[questionIndex];
-        questions.textContent = currentQuestion.question;
+            var questionIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[questionIndex];
+            questions.textContent = currentQuestion.question;
 
+            choices.forEach(choice => {
+                var number = choice.dataset['value'];
+                choice.textContent = currentQuestion['choice' + number];
+            });
+
+            availableQuestions.splice(questionIndex, 1);
+
+            if(availableQuestions.length === 0) { 
+                ending();
+                play = false;
+            };
+        };
+
+        // Adding choices to see if they are wrong or not
         choices.forEach(choice => {
-            var number = choice.dataset['value'];
-            choice.textContent = currentQuestion['choice' + number];
+            choice.addEventListener("click", e => {
+                var selectedChoice = e.target;
+                var selectedAnswer = selectedChoice.dataset["value"];
+
+                var changeColor = 'incorrect';
+                if(selectedAnswer == currentQuestion.answer) {
+                    changeColor = 'correct';
+                };
+
+                selectedChoice.parentElement.classList.add(changeColor);
+
+                var changeText = 'incorrect';
+                if(selectedAnswer == currentQuestion.answer) {
+                    changeText = 'correct';
+                };
+            
+                footer.textContent = changeText;
+
+                setTimeout( () => {
+                    selectedChoice.parentElement.classList.remove(changeColor);
+                    footer.textContent = "";
+                    displayQuestion();
+                }, 1000)
+
+                if(selectedChoice.dataset["value"] != currentQuestion.answer) {
+                    timeLeft = timeLeft - subtractTime;
+                };
+            });
         });
 
-        availableQuestions.splice(questionIndex, 1);
-
-        if(availableQuestions.length === 0) {
-            ending();
-        }
-    }
-
-    choices.forEach(choice => {
-        choice.addEventListener("click", e => {
-            var selectedChoice = e.target;
-            var selectedAnswer = selectedChoice.dataset["value"];
-
-            var changeColor = 'incorrect';
-            if(selectedAnswer == currentQuestion.answer) {
-                changeColor = 'correct';
-            }
-
-            selectedChoice.parentElement.classList.add(changeColor);
-
-            var changeText = 'incorrect';
-            if(selectedAnswer == currentQuestion.answer) {
-                changeText = 'correct';
-            }
-            
-            footer.textContent = changeText;
-
-            setTimeout( () => {
-                selectedChoice.parentElement.classList.remove(changeColor);
-                footer.textContent = "";
-                displayQuestion();
-            }, 1000)
-
-            if(selectedChoice.dataset["value"] != currentQuestion.answer) {
-                timeLeft = timeLeft - subtractTime;
-            }
-
-        })
-    })
-
-    setTimer();
-    displayQuestion();
-})
+        setTimer();
+        displayQuestion();
+    };
+});
 
 function saveHighScores() {
     var initials = initialEl.value.trim();
@@ -190,25 +200,23 @@ function saveHighScores() {
         var newScore = {
             score: timeLeft,
             initials: initials
-        }
+        };
 
         highscores.push(newScore);
         window.localStorage.setItem("highscores", JSON.stringify(highscores));
         window.location.href = "highscores.html";
-    }
-}
+    };
+};
 
 function checkForEnter(e) {
     if (e.key === "Enter") {
         saveHighScores();
-    }
-}
+    };
+};
 
 scoreBtn.addEventListener('click', function() {
     window.location.href = "highscores.html";
 });
-
-
 
 submitBtn.onclick = saveHighScores;
 initialEl.onkeyup = checkForEnter;
