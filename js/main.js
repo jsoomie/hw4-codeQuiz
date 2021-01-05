@@ -113,16 +113,16 @@ startBtn.addEventListener('click', function() {
                 clearInterval(timeInterval);
                 timesUp();
             }
+            if(timeLeft < 0) {
+                timeLeft = 0;
+            }
         
         }, 1000);
     }
 
     function timesUp() {
         timer.textContent = "Time is up!";
-        if(timeLeft < 0) {
-            timeLeft = 0;
-        }
-        clearInterval(timer);
+        clearInterval(setTimer);
         setTimeout( () => {
             ending();
         }, 1000)
@@ -172,7 +172,7 @@ startBtn.addEventListener('click', function() {
                 displayQuestion();
             }, 1000)
 
-            if(selectedChoice != currentQuestion.answer) {
+            if(!selectedChoice == currentQuestion.answer) {
                 timeLeft = timeLeft - subtractTime;
             }
 
